@@ -1,0 +1,195 @@
+/* Kettlemark docs. Light: cool photographic paper. Dark: a darkroom.
+   Signature: the orange date-imprint stamp of an old film camera, and a film-strip sidebar
+   whose frame numbers are the pages' reading order. System fonts only. */
+:root {
+  --paper: #e9ece6;
+  --sheet: #f7f8f4;
+  --ink: #191b18;
+  --muted: #565b53;
+  --rule: rgb(25 27 24 / 0.14);
+  --stamp: #b84a06;
+  --stamp-glow: rgb(232 100 12 / 0);
+  --film: #1a1b18;
+  --film-ink: #e9e7dc;
+  --film-muted: #9a9d92;
+  --sprocket: #e9ece6;
+  --code-bg: #20221e;
+  --code-ink: #ecebe2;
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #10110f;
+    --sheet: #171915;
+    --ink: #ecebe3;
+    --muted: #a4a79c;
+    --rule: rgb(236 235 227 / 0.13);
+    --stamp: #ff8a2a;
+    --stamp-glow: rgb(255 138 42 / 0.35);
+    --film: #0a0b09;
+    --film-ink: #ecebe3;
+    --film-muted: #8d9086;
+    --sprocket: #262822;
+    --code-bg: #0b0c0a;
+    --code-ink: #ecebe2;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1rem/1.65 var(--body);
+}
+a { color: var(--ink); text-decoration-color: var(--stamp); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { color: var(--stamp); }
+a:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; border-radius: 2px; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: 1rem; background: var(--sheet); padding: 0.5rem 0.8rem; z-index: 10; }
+
+/* The date-imprint stamp */
+.stamp, .prose .stamp {
+  font: 600 0.78rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  text-shadow: 0 0 6px var(--stamp-glow);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Masthead */
+.masthead {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 1.25rem max(16px, env(safe-area-inset-left, 0px)) 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.brand { font: 600 1.45rem/1 var(--display); text-decoration: none; letter-spacing: -0.01em; }
+.top { margin-left: auto; display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; font-size: 0.95rem; }
+.top a { text-decoration: none; color: var(--muted); padding-block: 0.6rem; }
+.top a:hover, .top a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--stamp); }
+
+/* Docs grid: article first in the HTML; the strip moves left on wide screens. */
+.docs {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2rem max(16px, env(safe-area-inset-right, 0px)) 3rem max(16px, env(safe-area-inset-left, 0px));
+  display: grid;
+  gap: 2.5rem;
+}
+.docs > * { min-width: 0; }
+@media (min-width: 60rem) {
+  .docs { grid-template-columns: 15.5rem minmax(0, 1fr); gap: 3.5rem; }
+  .docs .strip { grid-column: 1; grid-row: 1; position: sticky; top: 1.5rem; align-self: start; }
+  .docs .page { grid-column: 2; }
+  .docs .jump { display: none; }
+  .docs-plain { grid-template-columns: minmax(0, 46rem); justify-content: center; }
+}
+.jump { display: inline-block; font: 0.85rem var(--mono); padding-block: 0.6rem; }
+
+/* Film strip */
+.strip {
+  position: relative;
+  background: var(--film);
+  color: var(--film-ink);
+  border-radius: 6px;
+  padding: 1.1rem 1rem 1.25rem 2.1rem;
+}
+.strip::before {
+  /* sprocket holes down the edge */
+  content: "";
+  position: absolute;
+  inset: 0.6rem auto 0.6rem 0.6rem;
+  width: 0.7rem;
+  background: repeating-linear-gradient(to bottom, var(--sprocket) 0 0.55rem, transparent 0.55rem 1.15rem);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+.strip-title { margin: 0 0 0.75rem; font: 600 0.72rem var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--film-muted); }
+.strip ol { list-style: none; margin: 0; padding: 0; }
+.strip a {
+  display: grid;
+  grid-template-columns: 2.1rem 1fr;
+  align-items: baseline;
+  padding: 0.42rem 0;
+  color: var(--film-ink);
+  text-decoration: none;
+  font-size: 0.93rem;
+  line-height: 1.35;
+  border-top: 1px dashed rgb(236 235 227 / 0.12);
+}
+.strip li:first-child a { border-top: 0; }
+.strip .nested a { padding-left: 0.9rem; grid-template-columns: 2.1rem 1fr; font-size: 0.88rem; }
+.strip .frame { font: 600 0.72rem var(--mono); letter-spacing: 0.08em; color: var(--film-muted); }
+.strip a:hover .frame, .strip a[aria-current="page"] .frame { color: #ff8a2a; text-shadow: 0 0 6px rgb(255 138 42 / 0.45); }
+.strip a[aria-current="page"] { font-weight: 600; }
+@media (max-width: 59.99rem) {
+  .strip { scroll-margin-top: 1rem; }
+  .strip a { min-height: 2.75rem; align-content: center; }
+}
+
+/* Breadcrumbs */
+.crumbs ol { list-style: none; margin: 0 0 1.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; font-size: 0.88rem; color: var(--muted); }
+.crumbs li + li::before { content: "/"; margin-right: 0.35rem; color: var(--rule); }
+.crumbs a { color: var(--muted); }
+
+/* Article */
+.prose { max-width: 44rem; }
+.prose h1 { font: 500 clamp(2rem, 4.5vw, 2.9rem)/1.1 var(--display); letter-spacing: -0.015em; margin: 0 0 0.9rem; text-wrap: balance; }
+.prose h1 + p { font-size: 1.15rem; color: var(--muted); }
+.prose h2 { font: 600 1.45rem/1.25 var(--display); margin: 2.4rem 0 0.7rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); text-wrap: balance; }
+.prose h3 { font: 600 1.1rem/1.3 var(--body); margin: 1.8rem 0 0.5rem; }
+.prose p, .prose ul, .prose ol { margin: 0 0 1rem; }
+.prose li { margin-bottom: 0.3rem; }
+.prose code { font: 0.88em var(--mono); background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 0.08em 0.35em; }
+.prose pre {
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font: 0.86rem/1.6 var(--mono);
+  margin: 0 0 1.25rem;
+  border-left: 3px solid var(--stamp);
+}
+.prose pre code { background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
+.prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: 0.94rem; display: block; overflow-x: auto; }
+.prose th, .prose td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.prose th { font-weight: 600; background: var(--sheet); }
+.prose blockquote { margin: 0 0 1.25rem; padding: 0.8rem 1rem; background: var(--sheet); border-left: 3px solid var(--stamp); border-radius: 0 6px 6px 0; }
+.prose blockquote p:last-child { margin: 0; }
+
+/* Previous / next */
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); max-width: 44rem; }
+.pager a { display: block; padding: 0.8rem 1rem; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; text-decoration: none; font-weight: 600; }
+.pager a span { display: block; font: 600 0.7rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--stamp); margin-bottom: 0.2rem; }
+.pager .next { text-align: right; grid-column: 2; }
+.pager a:hover { border-color: var(--stamp); color: var(--ink); }
+
+/* Home */
+.home { max-width: 76rem; margin: 0 auto; padding: 3rem max(16px, env(safe-area-inset-right, 0px)) 3rem max(16px, env(safe-area-inset-left, 0px)); }
+.home h1 { font: 500 clamp(2.3rem, 6vw, 4rem)/1.05 var(--display); letter-spacing: -0.02em; margin: 0 0 1rem; max-width: 18ch; text-wrap: balance; }
+.home h1 + p { font-size: 1.2rem; color: var(--muted); max-width: 40rem; margin: 0 0 2rem; }
+.home h2 { font: 600 1.6rem/1.2 var(--display); margin: 3rem 0 1rem; }
+.home pre { background: var(--code-bg); color: var(--code-ink); border-radius: 6px; padding: 1.1rem 1.25rem; overflow-x: auto; font: 0.9rem/1.65 var(--mono); border-left: 3px solid var(--stamp); max-width: 52rem; }
+.home code { font-family: var(--mono); }
+.home ol { list-style: none; counter-reset: step; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); max-width: 60rem; }
+.home ol li { counter-increment: step; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem; }
+.home ol li::before { content: "Step " counter(step); display: block; font: 600 0.72rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--stamp); margin-bottom: 0.35rem; }
+.home p { max-width: 44rem; }
+
+/* Footer */
+.foot { border-top: 1px solid var(--rule); max-width: 76rem; margin: 0 auto; padding: 1.25rem max(16px, env(safe-area-inset-right, 0px)) 2rem max(16px, env(safe-area-inset-left, 0px)); color: var(--muted); font-size: 0.9rem; }
+.foot p { margin: 0; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

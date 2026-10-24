@@ -1,0 +1,185 @@
+/* Mira Halden, example portfolio built with vagejs.
+   Idea: a designer's canvas. Projects sit on artboards with measurement labels,
+   on cool green-grey paper; serif display, plain sans body, mono for annotations.
+   System fonts only, so nothing extra downloads. */
+
+:root {
+  --paper: #e9eeea;
+  --sheet: #f6f8f6;
+  --ink: #17201c;
+  --muted: #56645c;
+  --line: rgb(23 32 28 / 0.14);
+  --cobalt: #2f4bd8;
+  --rose: #c95b77;
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1.0625rem/1.65 var(--body);
+}
+a { color: var(--cobalt); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; border-radius: 2px; }
+img, svg { max-width: 100%; height: auto; display: block; }
+
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--sheet); padding: 0.6rem 1rem; z-index: 10; }
+.skip:focus { left: var(--gutter); }
+
+/* Header: the name set like a signature, nav in mono */
+.site-header {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.6rem var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+}
+.name {
+  font: italic 1.5rem/1 var(--display);
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.site-header nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.4rem; }
+.site-header nav a {
+  font: 0.82rem var(--mono);
+  color: var(--muted);
+  text-decoration: none;
+  padding-block: 0.6rem;
+}
+.site-header nav a:hover,
+.site-header nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rose); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+main { max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 4rem; }
+
+/* Type */
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.1; letter-spacing: -0.015em; text-wrap: balance; }
+h1 { font-size: clamp(2.2rem, 5.2vw, 3.8rem); margin: 0 0 1.25rem; }
+h2 { font-size: clamp(1.45rem, 2.6vw, 1.9rem); margin: 2.6rem 0 0.8rem; }
+h3 { font-size: 1.25rem; margin: 2rem 0 0.6rem; }
+p { margin: 0 0 1.1rem; }
+.prose { max-width: 40rem; }
+.prose ul { padding-left: 1.2rem; }
+.prose li { margin-bottom: 0.45rem; }
+.prose strong { font-weight: 600; }
+.eyebrow, .eyebrow a {
+  font: 0.75rem var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  margin: 0 0 1rem;
+}
+.eyebrow a:hover { color: var(--cobalt); }
+
+/* Home intro: one big serif sentence */
+.intro { padding-block: clamp(2rem, 7vw, 5.5rem) clamp(2rem, 5vw, 3.5rem); max-width: 50rem; }
+.intro h1 { font-size: clamp(2.4rem, 6.4vw, 4.8rem); line-height: 1.02; }
+.intro p { font-size: 1.15rem; color: var(--muted); max-width: 36rem; }
+.page { padding-top: clamp(1.5rem, 5vw, 3.5rem); }
+
+/* Artboards: the signature. A sheet on the canvas with a size label, like a design tool. */
+.artboard {
+  position: relative;
+  margin: 1.6rem 0 0;
+  background: var(--sheet);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgb(23 32 28 / 0.45);
+}
+.artboard svg { width: 100%; border-radius: 4px; }
+.artboard::before, .artboard::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--cobalt);
+  border-style: solid;
+}
+.artboard::before { left: -6px; top: -6px; border-width: 1px 0 0 1px; }
+.artboard::after { right: -6px; bottom: -6px; border-width: 0 1px 1px 0; }
+.size {
+  position: absolute;
+  top: -1.45rem;
+  left: 0;
+  font: 0.7rem var(--mono);
+  color: var(--cobalt);
+  letter-spacing: 0.04em;
+}
+
+.work { padding-top: 1rem; }
+.boards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+@media (min-width: 52rem) {
+  .boards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .boards li:first-child { grid-column: 1 / -1; }
+}
+.board { display: grid; gap: 1rem; color: inherit; text-decoration: none; }
+.board .artboard { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.board:hover .artboard { transform: translateY(-3px); box-shadow: 0 1px 0 var(--line), 0 26px 50px -28px rgb(23 32 28 / 0.55); }
+.board-meta { display: grid; gap: 0.25rem; }
+.board-title { font: 1.45rem/1.2 var(--display); }
+.board:hover .board-title { color: var(--cobalt); }
+.board-sub { color: var(--muted); }
+
+/* Writing list */
+.writing { margin-top: 4.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.posts { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; max-width: 44rem; }
+.posts li { display: grid; gap: 0.2rem; }
+.posts a { font: 1.3rem/1.25 var(--display); color: var(--ink); text-decoration: none; }
+.posts a:hover { color: var(--cobalt); }
+.posts span { color: var(--muted); font-size: 0.97rem; }
+.posts-index { margin-top: 1rem; }
+
+/* Case study */
+.case { padding-top: clamp(1.5rem, 5vw, 3.5rem); }
+.case-head { max-width: 48rem; }
+.case-summary { font-size: 1.2rem; color: var(--muted); }
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1rem;
+  margin: 1.8rem 0 2.6rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+.facts dt { font: 0.72rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0.2rem 0 0; }
+.artboard-wide { margin-bottom: 3rem; }
+.byline { font: 0.82rem var(--mono); color: var(--muted); margin-top: -0.5rem; }
+.next { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.next ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.next a { font: 1.25rem var(--display); color: var(--ink); text-decoration: none; }
+.next a:hover { color: var(--cobalt); }
+
+/* Footer: the example-site note */
+.site-footer {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 3rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.site-footer p { margin: 0 0 0.4rem; }
+.small { font: 0.78rem var(--mono); }
+
+@media (prefers-reduced-motion: reduce) {
+  .board .artboard { transition: none; }
+  .board:hover .artboard { transform: none; }
+}
